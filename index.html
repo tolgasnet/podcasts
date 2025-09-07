@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Podcast</title>
+  <meta name="description" content="Bite-size episodes on science, tech, and startup ideas." />
+  <meta property="og:title" content="My Podcast" />
+  <meta property="og:description" content="Bite-size episodes on science, tech, and startup ideas." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#111827" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --panel: #111827;
+      --ink: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+      --ring: rgba(96,165,250,.35);
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      background: radial-gradient(1200px 600px at 50% -200px, #1f2937, var(--bg));
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 28px 18px 48px; }
+    header {
+      border-radius: calc(var(--radius) + 8px);
+      background:
+        linear-gradient(135deg, rgba(96,165,250,.25), rgba(139,92,246,.15)),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      padding: 28px 22px;
+      display: grid;
+      gap: 8px;
+    }
+    header h1 { margin: 0; font-size: 28px; letter-spacing: .2px; }
+    header p { margin: 0; color: var(--muted); }
+    .episodes { margin-top: 22px; display: grid; gap: 16px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .title {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+      margin-bottom: 8px;
+    }
+    .title h3 { margin: 0; font-size: 18px; line-height: 1.25; }
+    .meta { color: var(--muted); font-size: 13px; }
+    audio { width: 100%; outline: none; }
+    .links { margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #0b1220;
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .btn:hover { border-color: rgba(255,255,255,.18); }
+    .empty, .loading, .error {
+      color: var(--muted);
+      text-align: center;
+      margin: 28px 0;
+    }
+    .loading:after {
+      content: "…";
+      animation: dots 1.2s steps(3, end) infinite;
+    }
+    @keyframes dots { 0%, 20% { content:""; } 40% { content:"."; } 60% { content:".."; } 80%, 100% { content:"..."; } }
+    footer { margin-top: 28px; text-align: center; color: var(--muted); font-size: 13px; }
+    @media (min-width: 720px) {
+      header { padding: 32px 28px; }
+      header h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1>My Podcast</h1>
+      <p>Short episodes on science, tech, and company building. New files in <code>/episodes</code> show up automatically.</p>
+    </header>
+
+    <div id="status" class="loading" role="status">Loading</div>
+    <section id="episodes" class="episodes" hidden></section>
+
+    <footer>Hosted on GitHub Pages • © <span id="year"></span></footer>
+  </div>
+
+  <script>
+    // 🔧 EDIT THESE 3 LINES
+    const GH_USER   = 'YOUR_USERNAME';
+    const GH_REPO   = 'YOUR_REPO';
+    const GH_BRANCH = 'main';            // or 'gh-pages', etc.
+    // 🔧 Folder for mp3s:
+    const DIR = 'episodes';
+
+    const API  = `https://api.github.com/repos/tolgasnet/podcasts/contents/episodes?ref=master`;
+    const RAW  = `https://raw.githubusercontent.com/tolgasnet/podcasts/master/episodes/`;
+
+    const $episodes = document.getElementById('episodes');
+    const $status   = document.getElementById('status');
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    function formatBytes(bytes) {
+      if (!Number.isFinite(bytes)) return '';
+      const units = ['B','KB','MB','GB']; let i=0;
+      while (bytes >= 1024 && i < units.length-1) { bytes/=1024; i++; }
+      return bytes.toFixed(i ? 1 : 0) + ' ' + units[i];
+    }
+    function nicify(name) {
+      try { name = decodeURIComponent(name); } catch {}
+      return name.replace(/\.[^/.]+$/,'').replace(/[_-]+/g,' ').trim();
+    }
+
+    async function load() {
+      try {
+        const res = await fetch(API, { headers: { 'Accept': 'application/vnd.github+json' }});
+        if (!res.ok) throw new Error('GitHub API: ' + res.status);
+        const files = await res.json();
+
+        const mp3s = (Array.isArray(files) ? files : [])
+          .filter(f => f.type === 'file' && /\.mp3$/i.test(f.name));
+
+        // sort newest first by filename (good if you prefix with dates) or by size/date if you prefer
+        mp3s.sort((a,b) => b.name.localeCompare(a.name, undefined, { numeric: true, sensitivity: 'base' }));
+
+        if (mp3s.length === 0) {
+          $status.className = 'empty';
+          $status.textContent = 'No episodes yet. Add .mp3 files to /episodes';
+          return;
+        }
+
+        $status.hidden = true;
+        $episodes.hidden = false;
+
+        for (const f of mp3s) {
+          const url = RAW + encodeURIComponent(f.name).replace(/%2F/g,'/'); // safe
+          const card = document.createElement('article');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="title">
+              <h3>${nicify(f.name)}</h3>
+              <div class="meta">${formatBytes(f.size)}</div>
+            </div>
+            <audio controls preload="metadata" src="${url}"></audio>
+            <div class="links">
+              <a class="btn" href="${url}" download>Download</a>
+              <a class="btn" href="${url}" target="_blank" rel="noopener">Open in new tab</a>
+            </div>
+          `;
+          $episodes.appendChild(card);
+        }
+      } catch (err) {
+        console.error(err);
+        $status.className = 'error';
+        $status.textContent = 'Error loading episodes. Check repo is public and folder name is correct.';
+      }
+    }
+    load();
+  </script>
+</body>
+</html>
