@@ -105,14 +105,13 @@
 
   <script>
     // 🔧 EDIT THESE 3 LINES
-    const GH_USER   = 'YOUR_USERNAME';
-    const GH_REPO   = 'YOUR_REPO';
-    const GH_BRANCH = 'main';            // or 'gh-pages', etc.
-    // 🔧 Folder for mp3s:
-    const DIR = 'episodes';
-
-    const API  = `https://api.github.com/repos/tolgasnet/podcasts/contents/episodes?ref=master`;
-    const RAW  = `https://raw.githubusercontent.com/tolgasnet/podcasts/master/episodes/`;
+    const OWNER   = 'tolgasnet';
+    const REPO    = 'podcasts';
+    const PATH    = 'episodes';
+    const BRANCH  = 'main';
+    
+    const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}?ref=${BRANCH}`;
+    const RAW = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${PATH}/`;
 
     const $episodes = document.getElementById('episodes');
     const $status   = document.getElementById('status');
