@@ -125,9 +125,26 @@
       while (bytes >= 1024 && i < units.length-1) { bytes/=1024; i++; }
       return bytes.toFixed(i ? 1 : 0) + ' ' + units[i];
     }
-    function nicify(name) {
-      try { name = decodeURIComponent(name); } catch {}
-      return name.replace(/\.[^/.]+$/,'').replace(/[_-]+/g,' ').trim();
+    
+    function nicify(filename) {
+      try { filename = decodeURIComponent(filename); } catch {}
+    
+      // remove extension
+      let name = filename.replace(/\.[^/.]+$/, '');
+    
+      // replace dashes/underscores with space
+      name = name.replace(/[-_]+/g, ' ');
+    
+      // capitalise words
+      name = name.split(' ').map(word => {
+        const upper = word.toUpperCase();
+        // handle some acronyms specially
+        if (['DNA','RNA','AI','ML','CRISPR'].includes(upper)) return upper;
+        // normal case: capitalise first letter
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }).join(' ');
+    
+      return name.trim();
     }
 
     async function load() {
