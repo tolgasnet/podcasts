@@ -8,84 +8,158 @@
   <meta property="og:title" content="Deep Science Digest" />
   <meta property="og:description" content="Bite-size episodes on science, tech, and startup ideas." />
   <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#111827" />
+  <meta name="theme-color" content="#ffffff" />
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #0b0f1a;
-      --panel: #111827;
-      --ink: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #60a5fa;
-      --ring: rgba(96,165,250,.35);
-      --radius: 16px;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #ff6a3d;
+      --radius: 14px;
+      --shadow: 0 6px 16px rgba(17,24,39,.06);
+      --shadow-hover: 0 12px 30px rgba(17,24,39,.10);
+      --link: #0ea5e9;
+      --ring: rgba(14,165,233,.25);
+      --wrap: 820px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0f14;
+        --panel: #0f141a;
+        --ink: #e5e7eb;
+        --muted: #94a3b8;
+        --line: #1f2937;
+        --shadow: 0 8px 20px rgba(0,0,0,.35);
+        --shadow-hover: 0 16px 36px rgba(0,0,0,.45);
+        --link: #7dd3fc;
+      }
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-      background: radial-gradient(1200px 600px at 50% -200px, #1f2937, var(--bg));
+      background: var(--bg);
       color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    .wrap { max-width: 860px; margin: 0 auto; padding: 28px 18px 48px; }
+    .wrap { max-width: var(--wrap); margin: 0 auto; padding: 32px 18px 56px; }
+
+    /* Header */
     header {
-      border-radius: calc(var(--radius) + 8px);
-      background:
-        linear-gradient(135deg, rgba(96,165,250,.25), rgba(139,92,246,.15)),
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow: var(--shadow);
-      padding: 28px 22px;
       display: grid;
-      gap: 8px;
+      gap: 6px;
+      padding: 24px 0 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 16px;
     }
-    header h1 { margin: 0; font-size: 28px; letter-spacing: .2px; }
-    header p { margin: 0; color: var(--muted); }
-    .episodes { margin-top: 22px; display: grid; gap: 16px; }
-    .card {
-      background: var(--panel);
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: conic-gradient(from 200deg, #ff6a3d, #fbbf24, #22d3ee, #ff6a3d);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
     }
-    .title {
-      display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
-      margin-bottom: 8px;
+    h1 {
+      font-family: "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+      font-weight: 600;
+      font-size: 34px;
+      letter-spacing: .1px;
+      margin: 0;
+      line-height: 1.1;
     }
-    .title h3 { margin: 0; font-size: 18px; line-height: 1.25; }
-    .meta { color: var(--muted); font-size: 13px; }
-    audio { width: 100%; outline: none; }
-    .links { margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap; }
+    header p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Subscribe / top links */
+    .top-actions {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 14px;
+    }
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
-      background: #0b1220;
-      color: var(--ink);
-      padding: 8px 12px;
-      border-radius: 10px;
       text-decoration: none;
-      border: 1px solid rgba(255,255,255,.08);
+      border: 1px solid var(--line);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      color: var(--ink);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      transition: box-shadow .2s ease, transform .06s ease, border-color .2s ease;
     }
-    .btn:hover { border-color: rgba(255,255,255,.18); }
+    .btn:hover { box-shadow: var(--shadow-hover); border-color: color-mix(in srgb, var(--ink) 10%, var(--line)); }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .btn.primary:hover { box-shadow: var(--shadow-hover); }
+
+    /* Episodes */
+    .episodes { margin-top: 18px; display: grid; gap: 18px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 16px 14px;
+      box-shadow: var(--shadow);
+      transition: box-shadow .2s ease, transform .06s ease, border-color .2s ease;
+    }
+    .card:hover { box-shadow: var(--shadow-hover); border-color: color-mix(in srgb, var(--ink) 10%, var(--line)); }
+    .title {
+      display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .title h3 {
+      margin: 0;
+      font-family: "Source Serif 4", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 1.25;
+      letter-spacing: .2px;
+    }
+    .meta { color: var(--muted); font-size: 13px; text-align: right; white-space: nowrap; }
+    .submeta { color: var(--muted); font-size: 13px; margin: 8px 0 10px; }
+    audio { width: 100%; outline: none; border-radius: 10px; }
+    .links { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .link {
+      color: var(--link);
+      text-decoration: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--link) 40%, transparent);
+      padding-bottom: 1px;
+    }
+    .link:hover { border-bottom-color: var(--link); }
+
     .empty, .loading, .error {
       color: var(--muted);
       text-align: center;
       margin: 28px 0;
+      font-size: 15px;
     }
-    .loading:after {
-      content: "…";
-      animation: dots 1.2s steps(3, end) infinite;
-    }
+    .loading::after { content: "…"; animation: dots 1.2s steps(3, end) infinite; }
     @keyframes dots { 0%, 20% { content:""; } 40% { content:"."; } 60% { content:".."; } 80%, 100% { content:"..."; } }
-    footer { margin-top: 28px; text-align: center; color: var(--muted); font-size: 13px; }
+
+    footer {
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
     @media (min-width: 720px) {
-      header { padding: 32px 28px; }
-      header h1 { font-size: 32px; }
+      .wrap { padding: 40px 22px 72px; }
+      h1 { font-size: 40px; }
+      .title h3 { font-size: 22px; }
     }
   </style>
 </head>
@@ -93,8 +167,18 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>Deep Science Digest</h1>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <h1>Deep Science Digest</h1>
+      </div>
       <p>Bite-size insights from the frontiers of science, technology, and innovation.</p>
+
+      <div class="top-actions">
+        <!-- Swap these hrefs to your real links if you add them -->
+        <a class="btn primary" href="#subscribe">Subscribe</a>
+        <a class="btn" href="#rss">RSS</a>
+        <a class="btn" href="https://github.com/tolgasnet/podcasts" target="_blank" rel="noopener">GitHub</a>
+      </div>
     </header>
 
     <div id="status" class="loading" role="status">Loading</div>
@@ -111,7 +195,7 @@
     const REPO    = 'podcasts';
     const PATH    = 'episodes';
     const BRANCH  = 'main';
-    
+
     const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}?ref=${BRANCH}`;
     const RAW = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${PATH}/`;
 
@@ -121,30 +205,44 @@
 
     function formatBytes(bytes) {
       if (!Number.isFinite(bytes)) return '';
-      const units = ['B','KB','MB','GB']; let i=0;
-      while (bytes >= 1024 && i < units.length-1) { bytes/=1024; i++; }
-      return bytes.toFixed(i ? 1 : 0) + ' ' + units[i];
+      const u = ['B','KB','MB','GB']; let i = 0;
+      while (bytes >= 1024 && i < u.length - 1) { bytes /= 1024; i++; }
+      return bytes.toFixed(i ? 1 : 0) + ' ' + u[i];
     }
-    
+    function formatDuration(sec) {
+      if (!Number.isFinite(sec)) return '';
+      sec = Math.round(sec);
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return h ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
+    }
     function nicify(filename) {
       try { filename = decodeURIComponent(filename); } catch {}
-    
-      // remove extension
       let name = filename.replace(/\.[^/.]+$/, '');
-    
-      // replace dashes/underscores with space
+
+      // Extract date prefix like 2025-08-30_ or 2025_08_30-
+      const dateMatch = name.match(/^(\d{4})[-_](\d{2})[-_](\d{2})[-_ ]?/);
+      if (dateMatch) {
+        name = name.slice(dateMatch[0].length);
+      }
+
       name = name.replace(/[-_]+/g, ' ');
-    
-      // capitalise words
       name = name.split(' ').map(word => {
         const upper = word.toUpperCase();
-        // handle some acronyms specially
         if (['DNA','RNA','AI','ML','CRISPR'].includes(upper)) return upper;
-        // normal case: capitalise first letter
         return word.charAt(0).toUpperCase() + word.slice(1);
       }).join(' ');
-    
       return name.trim();
+    }
+    function extractDateFromName(name) {
+      const m = name.match(/^(\d{4})[-_](\d{2})[-_](\d{2})/);
+      if (!m) return null;
+      const d = new Date(`${m[1]}-${m[2]}-${m[3]}T00:00:00Z`);
+      return Number.isNaN(d.getTime()) ? null : d;
+    }
+    function formatUKDate(d) {
+      return d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : null;
     }
 
     async function load() {
@@ -154,10 +252,16 @@
         const files = await res.json();
 
         const mp3s = (Array.isArray(files) ? files : [])
-          .filter(f => f.type === 'file' && /\.mp3$/i.test(f.name));
+          .filter(f => f.type === 'file' && /\.mp3$/i.test(f.name))
+          .map(f => ({ ...f, parsedDate: extractDateFromName(f.name) }));
 
-        // sort newest first by filename (good if you prefix with dates) or by size/date if you prefer
-        mp3s.sort((a,b) => b.name.localeCompare(a.name, undefined, { numeric: true, sensitivity: 'base' }));
+        // Sort by parsed date if present, else by name (desc)
+        mp3s.sort((a, b) => {
+          if (a.parsedDate && b.parsedDate) return b.parsedDate - a.parsedDate;
+          if (a.parsedDate) return -1;
+          if (b.parsedDate) return 1;
+          return b.name.localeCompare(a.name, undefined, { numeric: true, sensitivity: 'base' });
+        });
 
         if (mp3s.length === 0) {
           $status.className = 'empty';
@@ -169,21 +273,52 @@
         $episodes.hidden = false;
 
         for (const f of mp3s) {
-          const url = RAW + encodeURIComponent(f.name).replace(/%2F/g,'/'); // safe
+          const url = RAW + encodeURIComponent(f.name).replace(/%2F/g,'/');
+
           const card = document.createElement('article');
           card.className = 'card';
+
+          const dateTxt = formatUKDate(f.parsedDate);
+          const sizeTxt = formatBytes(f.size);
+          const metaId = crypto.randomUUID();
+
           card.innerHTML = `
             <div class="title">
               <h3>${nicify(f.name)}</h3>
-              <div class="meta">${formatBytes(f.size)}</div>
+              <div class="meta" id="${metaId}">
+                ${[dateTxt, sizeTxt].filter(Boolean).join(' · ')}
+              </div>
             </div>
+
             <audio controls preload="metadata" src="${url}"></audio>
-            <div class="links">
-              <a class="btn" href="${url}" download>Download</a>
-              <a class="btn" href="${url}" target="_blank" rel="noopener">Open in new tab</a>
-            </div>
+
+            <p class="submeta">
+              <a class="link" href="${url}" download>Download</a>
+              &nbsp;·&nbsp;
+              <a class="link" href="${url}" target="_blank" rel="noopener">Open in new tab</a>
+              &nbsp;·&nbsp;
+              <a class="link" href="${location.origin + location.pathname}#${encodeURIComponent(f.name)}" onclick="navigator.clipboard.writeText('${location.origin + location.pathname}#${encodeURIComponent(f.name)}'); this.textContent='Link copied'; setTimeout(()=>this.textContent='Copy link',1200); return false;">Copy link</a>
+            </p>
           `;
+
+          // Anchor for direct linking
+          card.id = encodeURIComponent(f.name);
+
           $episodes.appendChild(card);
+
+          // Load duration asynchronously and patch meta
+          const audio = new Audio();
+          audio.preload = 'metadata';
+          audio.src = url;
+          audio.addEventListener('loadedmetadata', () => {
+            const meta = document.getElementById(metaId);
+            if (meta) {
+              const existing = meta.textContent ? meta.textContent.split('·').map(t => t.trim()).filter(Boolean) : [];
+              meta.textContent = [...existing, formatDuration(audio.duration)].join(' · ');
+            }
+            audio.remove();
+          });
+          audio.addEventListener('error', () => audio.remove());
         }
       } catch (err) {
         console.error(err);
